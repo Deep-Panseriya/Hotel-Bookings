@@ -23,7 +23,7 @@ const Hero = () => {
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.2 }}
-        className="bg-[#49B9FF]/50 px-3.5 py-1 rounded-full mt-18"
+        className="bg-[#49B9FF]/50 px-3.5 py-1 rounded-full mt-18 max-sm:mt-[3rem]"
       >
         The Ultimate Hotel Experience
       </motion.p>
@@ -32,7 +32,7 @@ const Hero = () => {
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.4 }}
-        className="font-playfair text-2xl md:text-5xl md:text-[56px] md:leading-[56px] font-bold md:font-extrabold max-w-xl mt-4 max-sm:mt-2 max-sm:leading-[20px]"
+        className="font-playfair text-2xl md:text-5xl md:text-[56px] md:leading-[56px] font-bold md:font-extrabold max-w-xl mt-4 max-sm:mt-2 max-sm:leading-[25px]"
       >
         Discover Your Perfect GateWay Destination
       </motion.h1>
