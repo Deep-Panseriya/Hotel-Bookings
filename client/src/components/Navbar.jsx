@@ -1,8 +1,7 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
-import logo from '../assets/logo.svg'
+import { Link, useLocation } from 'react-router-dom'
+import logo from '../assets/logo.svg' // your single logo image
 import searchIcon from '../assets/searchIcon.svg'
-const assets = { logo, searchIcon }
 
 const Navbar = () => {
   const navLinks = [
@@ -11,6 +10,9 @@ const Navbar = () => {
     { name: 'Experience', path: '/' },
     { name: 'About', path: '/' }
   ]
+
+  const location = useLocation()
+  const isHome = location.pathname === '/'
 
   const [isScrolled, setIsScrolled] = React.useState(false)
   const [isMenuOpen, setIsMenuOpen] = React.useState(false)
@@ -23,44 +25,49 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
+  // text color based on scroll
+  const textColorClass = isScrolled || !isHome ? 'text-gray-700' : 'text-white'
+
   return (
     <nav
-      className={`fixed top-0 left-0 w-full flex items-center justify-between px-6 md:px-16 lg:px-24 xl:px-32 transition-all duration-500 z-50 gap-4 safari-nav ${
-        isScrolled
-          ? 'bg-white/80 shadow-md text-gray-700 backdrop-blur-lg py-3 md:py-4'
-          : 'py-4 md:py-6'
+      className={`fixed top-0 left-0 w-full flex items-center justify-between px-6 md:px-16 lg:px-24 xl:px-32 transition-all duration-500 z-50 gap-4 ${
+        isScrolled || !isHome
+          ? 'bg-white shadow-md backdrop-blur-lg py-3 md:py-4'
+          : 'bg-transparent py-4 md:py-6'
       }`}
     >
       {/* Logo */}
       <Link to='/'>
         <img
-          src={assets.logo}
-          className={`h-9 ${isScrolled && 'invert opacity-80'}`}
+          src={logo}
+          alt='Logo'
+          className={`h-9 transition-all duration-300 ${
+            isScrolled || !isHome ? 'invert' : ''
+          }`}
         />
       </Link>
 
       {/* Desktop Nav */}
-      <div className='hidden md:flex items-center gap-4 lg:gap-8'>
+      <div
+        className={`hidden md:flex items-center gap-4 lg:gap-8 ${textColorClass}`}
+      >
         {navLinks.map((link, i) => (
           <Link
             key={i}
             to={link.path}
-            className={`group flex flex-col gap-0.5 ${
-              isScrolled ? 'text-gray-700' : 'text-white'
-            }`}
+            className={`group flex flex-col gap-0.5 ${textColorClass}`}
           >
             {link.name}
             <div
               className={`${
-                isScrolled ? 'bg-gray-700' : 'bg-white'
+                textColorClass === 'text-white' ? 'bg-white' : 'bg-gray-700'
               } h-0.5 w-0 group-hover:w-full transition-all duration-300`}
             />
           </Link>
         ))}
         <button
-          className={`border px-4 py-1 text-sm font-light rounded-full cursor-pointer ${
-            isScrolled ? 'text-black' : 'text-white'
-          } transition-all`}
+          className={`border px-4 py-1 text-sm font-light rounded-full cursor-pointer
+             transition-all ${isScrolled || !isHome ? 'text-gray-800 border-black' : ''}`}
         >
           Dashboard
         </button>
@@ -69,14 +76,17 @@ const Navbar = () => {
       {/* Desktop Right */}
       <div className='hidden md:flex items-center gap-4'>
         <img
-          src={assets.searchIcon}
+          src={searchIcon}
           alt='SearchIcon'
-          className={`${isScrolled && 'invert opacity-80'}
-          h-6 w-6 cursor-pointer transition-all duration-500`}
+          className={`h-6 w-6 cursor-pointer transition-all duration-500 ${
+            isScrolled || !isHome ? 'invert' : ''
+          }`}
         />
         <button
           className={`px-8 py-2.5 rounded-full ml-4 transition-all duration-500 ${
-            isScrolled ? 'text-white bg-black' : 'bg-white text-black'
+            isScrolled || !isHome
+              ? 'text-white bg-black'
+              : 'bg-white text-black'
           }`}
         >
           Login
@@ -84,42 +94,26 @@ const Navbar = () => {
       </div>
 
       {/* Mobile Menu Button */}
-      <div className='flex items-center gap-3 md:hidden'>
-        <svg
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-          className={`h-6 w-6 cursor-pointer ${isScrolled ? 'invert' : ''}`}
-          fill='none'
-          stroke='currentColor'
-          strokeWidth='2'
-          viewBox='0 0 24 24'
-          color='white'
-        >
-          <line x1='4' y1='6' x2='20' y2='6' />
-          <line x1='4' y1='12' x2='20' y2='12' />
-          <line x1='4' y1='18' x2='20' y2='18' />
-        </svg>
-      </div>
+      <button
+        onClick={() => setIsMenuOpen(!isMenuOpen)}
+        className={`md:hidden text-2xl font-bold cursor-pointer ${
+          isScrolled || !isHome ? 'text-gray-700' : 'text-white'
+        }`}
+      >
+        {isMenuOpen ? '×' : '☰'}
+      </button>
 
       {/* Mobile Menu */}
       <div
-        className={`fixed top-0 left-0 w-full h-screen bg-white text-base flex flex-col md:hidden items-center justify-center gap-6 font-medium text-gray-800 transition-all duration-500 ${
+        className={`fixed top-0 left-0 w-full h-screen bg-white text-base flex flex-col md:hidden items-center justify-center gap-6 font-medium text-gray-800 transition-transform duration-500 ${
           isMenuOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
         <button
-          className='absolute top-4 right-4'
+          className='absolute top-4 right-4 text-3xl font-bold'
           onClick={() => setIsMenuOpen(false)}
         >
-          <svg
-            className='h-6 w-6'
-            fill='none'
-            stroke='currentColor'
-            strokeWidth='2'
-            viewBox='0 0 24 24'
-          >
-            <line x1='18' y1='6' x2='6' y2='18' />
-            <line x1='6' y1='6' x2='18' y2='18' />
-          </svg>
+          ×
         </button>
 
         {navLinks.map((link, i) => (
@@ -127,7 +121,7 @@ const Navbar = () => {
             key={i}
             to={link.path}
             onClick={() => setIsMenuOpen(false)}
-            className='text-lg font-semibold'
+            className='text-lg font-semibold text-gray-800'
           >
             {link.name}
           </Link>
